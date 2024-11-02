@@ -7,12 +7,12 @@ import os
 
 # Files to load and output (update with correct file paths)
 file_to_load = os.path.join("PyBank", "Resources", "budget_data.csv")  # Input file path
-file_to_output = os.path.join("PyBank", "analysis", "budget_analysis.txt")  # Output file path
+file_to_output = os.path.join("PyBank", "Analysis", "budget_analysis.txt")  # Output file path
 
 # Define variables to track the financial data
 total_months = 0
-total_net = 0
-previous_profit_loss = 0
+net_total = 0
+profit_loss = 0
 net_change_list = []
 greatest_increase = ["", 0]  # [month, amount]
 greatest_decrease = ["", float("inf")]  # [month, amount]
@@ -29,8 +29,8 @@ with open(file_to_load) as financial_data:
      # Extract first row to avoid appending to net_change_list
     first_row = next(reader)
     total_months += 1
-    total_net += int(first_row[1])
-    previous_profit_loss = int(first_row[1])
+    net_total += int(first_row[1])
+    profit_loss = int(first_row[1])
 
     # Track the total and net change
 
@@ -40,10 +40,10 @@ with open(file_to_load) as financial_data:
 
         # Track the total
         total_months += 1
-        total_net += int(row[1])
+        net_total += int(row[1])
 
         # Track the net change
-        net_change = int(row[1]) - previous_profit_loss
+        net_change = int(row[1]) - profit_loss
         net_change_list.append(net_change)
 
         # Calculate the greatest increase in profits (month and amount)
@@ -56,7 +56,7 @@ with open(file_to_load) as financial_data:
             greatest_decrease[0] = row[0]
             greatest_decrease[1] = net_change
 
-        previous_profit_loss = int(row[1])
+        profit_loss = int(row[1])
 
 
 # Calculate the average net change across the months
@@ -68,7 +68,7 @@ output = (
     f"Financial Analysis\n"
     f"----------------------------\n"
     f"Total Months: {total_months}\n"
-    f"Total: ${total_net}\n"
+    f"Total: ${net_total}\n"
     f"Average Change: ${average_change:.2f}\n"
     f"Greatest Increase in Profits: {greatest_increase[0]} (${greatest_increase[1]})\n"
     f"Greatest Decrease in Profits: {greatest_decrease[0]} (${greatest_decrease[1]})\n"
